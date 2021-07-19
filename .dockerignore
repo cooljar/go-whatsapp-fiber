@@ -1,0 +1,18 @@
+# Files
+.dockerignore
+.editorconfig
+.gitignore
+run.sh
+run.sh.example
+Dockerfile
+Makefile
+LICENSE
+**/*.md
+**/*_test.go
+**/*.out
+
+# Folders
+.git/
+build/
+.idea/
+dto/
