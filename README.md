@@ -31,7 +31,7 @@ $ make run
 Go to your API Docs page: [127.0.0.1:3000/swagger/index.html](http://127.0.0.1:3000/swagger/index.html)
 <br>
 API Docs page will be look like:
-![Screenshot](https://github.com/cooljar/go-whatsapp-fiber/sc.png)
+![Screenshot](https://raw.githubusercontent.com/cooljar/go-whatsapp-fiber/main/sc.png)
 Below is the instructions to perform messaging:
 * Make sure your computer is connected to the internet.
 * Prepare your smartphone and make sure the internet is active.
