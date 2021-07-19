@@ -36,7 +36,7 @@ API Docs page will be look like:
 Below is the instructions to perform messaging:
 * Make sure your computer is connected to the internet.
 * Prepare your smartphone and make sure the internet is active.
-* Hit the [Login](127.0.0.1:3000/swagger/index.html#/Whatsapp/post_v1_whatsapp_login) endpoint, you will see a QR Code if request was success.
+* Hit the [Login](http://127.0.0.1:3000/swagger/index.html#/Whatsapp/post_v1_whatsapp_login) endpoint, you will see a QR Code if request was success.
   <br><img src="https://raw.githubusercontent.com/cooljar/go-whatsapp-fiber/main/qr.png" width="250">
   <br>Check your `Makefile` setting if an error occurred.
 * Scant it, and done.
