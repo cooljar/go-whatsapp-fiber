@@ -26,6 +26,27 @@ $ make run
 #   - Generate API docs by Swagger
 #   - Build and run Docker containers
 ```
+Stop application by using following command:
+```bash
+$ make stop
+
+# Process:
+#   - Stop and remove app container
+#   - remove image
+```
+
+### Running On Local Machine
+Below is the instructions to run this project on your local machine:
+1. Rename `run.sh.example` to `run.sh` and fill it with your environment values.
+2. Open new `terminal`.
+3. Set `run.sh` file permission.
+```bash
+$ chmod +x ./run.sh
+```
+4. Run application from terminal by using following command:
+```bash
+$ ./run.sh
+```
 
 ### API Access
 Go to your API Docs page: [127.0.0.1:3000/swagger/index.html](http://127.0.0.1:3000/swagger/index.html)
@@ -41,30 +62,6 @@ Below is the instructions to perform messaging:
   <br>Check your `Makefile` setting if an error occurred.
 * Scant it, and done.
 Now you can perforn all endpoint to send a message.
-
-### Stopping
-Stop application by using following command:
-```bash
-$ make stop
-
-# Process:
-#   - Stop and remove app container
-#   - remove image
-```
-
-## Running On Local Machine
-Below is the instructions to run this project on your local machine:
-1. Rename `run.sh.example` to `run.sh` and fill it with your environment values.
-2. Open new `terminal`.
-3. Set `run.sh` file permission.
-```bash
-$ chmod +x ./run.sh
-```
-4. Run application from terminal by using following command:
-```bash
-$ ./run.sh
-```
-5. Go to your API Docs page: 127.0.0.1:3000/swagger/index.html.
 
 ## Testing
 - Inspects source code for security problems using [gosec](https://github.com/securego/gosec). You need to install it first.
