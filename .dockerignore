@@ -10,6 +10,7 @@ LICENSE
 **/*.md
 **/*_test.go
 **/*.out
+storage/*.gob
 
 # Folders
 .git/

@@ -23,7 +23,7 @@ func NewWhatsappUsecase(conn *whatsapp.Conn) domain.WhatsappUsecase {
 }
 
 func (w *whatsappUsecase) Login(vMajor, vMinor, vBuild, timeout, reconnect int, clientNameShort, clientNameLong string) (qrCodeStr string, err error) {
-	if w.whatsappConn.GetConnected() && w.whatsappConn.GetLoggedIn(){
+	if w.whatsappConn.GetConnected() && w.whatsappConn.GetLoggedIn() {
 		err = errors.New("session already active")
 		return
 	}
@@ -60,7 +60,7 @@ func (w *whatsappUsecase) Login(vMajor, vMinor, vBuild, timeout, reconnect int, 
 		session, err = w.whatsappConn.Login(qr)
 		if err != nil {
 			log.Println(log.LogLevelError, "error during login:", err)
-		}else {
+		} else {
 			log.Println(log.LogLevelInfo, "login successful, session:", session)
 
 			//save session
@@ -68,6 +68,8 @@ func (w *whatsappUsecase) Login(vMajor, vMinor, vBuild, timeout, reconnect int, 
 			if err != nil {
 				log.Println(log.LogLevelError, "error during login:", err)
 			}
+
+			w.whatsappConn.AddHandler(utils.WhatsappHandler{})
 		}
 
 		return
@@ -86,7 +88,7 @@ func (w *whatsappUsecase) Login(vMajor, vMinor, vBuild, timeout, reconnect int, 
 }
 
 func (w *whatsappUsecase) GetInfo() (info domain.WaWeb, err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -108,7 +110,7 @@ func (w *whatsappUsecase) GetInfo() (info domain.WaWeb, err error) {
 }
 
 func (w *whatsappUsecase) SendText(form domain.WaSendTextForm) (msgId string, err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -144,7 +146,7 @@ func (w *whatsappUsecase) SendText(form domain.WaSendTextForm) (msgId string, er
 }
 
 func (w *whatsappUsecase) SendLocation(form domain.WaSendLocationForm) (msgId string, err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -179,7 +181,7 @@ func (w *whatsappUsecase) SendLocation(form domain.WaSendLocationForm) (msgId st
 }
 
 func (w *whatsappUsecase) SendFile(form domain.WaSendFileForm, fileType string) (msgId string, err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -204,7 +206,7 @@ func (w *whatsappUsecase) SendFile(form domain.WaSendFileForm, fileType string) 
 }
 
 func (w *whatsappUsecase) Groups(jid string) (g string, err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -214,13 +216,13 @@ func (w *whatsappUsecase) Groups(jid string) (g string, err error) {
 		return
 	}
 
-	g = <- data
+	g = <-data
 
 	return
 }
 
 func (w *whatsappUsecase) Logout() (err error) {
-	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false{
+	if w.whatsappConn.GetConnected() == false || w.whatsappConn.GetLoggedIn() == false {
 		err = errors.New("invalid session, please login")
 		return
 	}
@@ -249,6 +251,8 @@ func (w *whatsappUsecase) RestoreSession() error {
 		if err != nil {
 			return err
 		}
+
+		w.whatsappConn.AddHandler(utils.WhatsappHandler{})
 	}
 
 	return nil
@@ -258,7 +262,8 @@ func readSession() (whatsapp.Session, error) {
 	fmt.Println(os.TempDir())
 
 	session := whatsapp.Session{}
-	file, err := os.Open(os.TempDir() + "/whatsappSession.gob")
+	//file, err := os.Open(os.TempDir() + "/whatsappSession.gob")
+	file, err := os.Open(os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") + "/whatsappSession.gob")
 	if err != nil {
 		return session, err
 	}
@@ -280,7 +285,8 @@ func readSession() (whatsapp.Session, error) {
 
 func writeSession(session whatsapp.Session) error {
 	fmt.Println(os.TempDir())
-	file, err := os.Create(os.TempDir() + "/whatsappSession.gob")
+	//file, err := os.Create(os.TempDir() + "/whatsappSession.gob")
+	file, err := os.Create(os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") + "/whatsappSession.gob")
 	if err != nil {
 		return err
 	}
@@ -326,8 +332,8 @@ func sendImage(w *whatsappUsecase, form domain.WaSendFileForm) (msgId string, er
 		Info: whatsapp.MessageInfo{
 			RemoteJid: jid,
 		},
-		Content:  f,
-		Type:     form.FileHeader.Header.Get("Content-Type"),
+		Content: f,
+		Type:    form.FileHeader.Header.Get("Content-Type"),
 		Caption: form.Message,
 	}
 
@@ -362,8 +368,8 @@ func sendAudio(w *whatsappUsecase, form domain.WaSendFileForm) (msgId string, er
 		Info: whatsapp.MessageInfo{
 			RemoteJid: jid,
 		},
-		Content:  f,
-		Type:     form.FileHeader.Header.Get("Content-Type"),
+		Content: f,
+		Type:    form.FileHeader.Header.Get("Content-Type"),
 	}
 
 	if len(form.MsgQuotedID) != 0 {
@@ -397,8 +403,8 @@ func sendVideo(w *whatsappUsecase, form domain.WaSendFileForm) (msgId string, er
 		Info: whatsapp.MessageInfo{
 			RemoteJid: jid,
 		},
-		Content:  f,
-		Type:     form.FileHeader.Header.Get("Content-Type"),
+		Content: f,
+		Type:    form.FileHeader.Header.Get("Content-Type"),
 		Caption: form.Message,
 	}
 

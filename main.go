@@ -41,6 +41,9 @@ func init() {
 	if os.Getenv("WHATSAPP_CLIENT_VERSION_BUILD") == "" {
 		exitf("WHATSAPP_CLIENT_VERSION_BUILD env is required")
 	}
+	if os.Getenv("WHATSAPP_CLIENT_SESSION_PATH") == "" {
+		exitf("WHATSAPP_CLIENT_SESSION_PATH env is required")
+	}
 }
 
 // @title Go Whatsapp Rest API
@@ -52,7 +55,7 @@ func init() {
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @BasePath /api
-func main()  {
+func main() {
 	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
 		// timeout
 		Timeout: 20 * time.Second,
@@ -64,7 +67,6 @@ func main()  {
 	if err != nil {
 		exitf("Whatssap connection error: ", err)
 	}
-	wac.AddHandler(utils.WhatsappHandler{})
 
 	waClientVerMajInt, err := strconv.Atoi(os.Getenv("WHATSAPP_CLIENT_VERSION_MAJOR"))
 	if err != nil {

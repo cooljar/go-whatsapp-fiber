@@ -14,8 +14,8 @@ func (WhatsappHandler) HandleError(err error) {
 
 func (WhatsappHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	fmt.Println("------------------------------")
-	fmt.Println(message.Info)
-	fmt.Println(message.Text)
+	fmt.Println("RemoteJid: ", message.Info.RemoteJid)
+	fmt.Println("Text: ", message.Text)
 	fmt.Println("------------------------------")
 }
 
@@ -31,7 +31,7 @@ func (WhatsappHandler) HandleVideoMessage(message whatsapp.VideoMessage) {
 	//fmt.Println(message)
 }
 
-func (WhatsappHandler) HandleAudioMessage(message whatsapp.AudioMessage){
+func (WhatsappHandler) HandleAudioMessage(message whatsapp.AudioMessage) {
 	//fmt.Println(message)
 }
 
