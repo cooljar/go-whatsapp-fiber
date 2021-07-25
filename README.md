@@ -11,7 +11,7 @@ Prequisites package:
 * [Docker](https://www.docker.com/get-started) - for developing, shipping, and running applications (Application Containerization).
 * [Go](https://golang.org/) - Go Programming Language
 * [Swag](https://github.com/swaggo/swag) - converts Go annotations to [Swagger Documentation 2.0](https://swagger.io/docs/specification/2-0/basic-structure/)
-* [Make](https://golang.org/) - Automated Execution using Makefile
+* [Make](https://www.gnu.org/software/make/manual/make.html) - Automated Execution using Makefile
 
 Optional package:
 * [gosec](https://github.com/securego/gosec) Golang Security Checker. Inspects source code for security problems by scanning the Go AST
