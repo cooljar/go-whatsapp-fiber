@@ -22,7 +22,7 @@ test: security
 	go tool cover -func=cover.out
 
 docker_build_image:
-	docker build -t cooljar-go-whatsapp-fiber .
+	docker build -t $(IMAGE_NAME) .
 
 docker_app: docker_build_image
 	docker run -d \
