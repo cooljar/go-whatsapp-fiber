@@ -10,7 +10,6 @@ These instructions will get you a copy of the project up and running on docker c
 Prequisites package:
 * [Docker](https://www.docker.com/get-started) - for developing, shipping, and running applications (Application Containerization).
 * [Go](https://golang.org/) - Go Programming Language
-* [Swag](https://github.com/swaggo/swag) - converts Go annotations to [Swagger Documentation 2.0](https://swagger.io/docs/specification/2-0/basic-structure/)
 * [Make](https://www.gnu.org/software/make/manual/make.html) - Automated Execution using Makefile
 
 Optional package:
@@ -61,7 +60,7 @@ Below is the instructions to perform messaging:
   <br><img src="https://raw.githubusercontent.com/cooljar/go-whatsapp-fiber/main/qr.png" width="250">
   <br>Check your `Makefile` setting if an error occurred.
 * Scant it, and done.
-Now you can perforn all endpoint to send a message.
+Now you can perform all endpoint to send a message.
 
 ## Testing
 - Inspects source code for security problems using [gosec](https://github.com/securego/gosec). You need to install it first.
