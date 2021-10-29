@@ -19,9 +19,6 @@ test: security
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
 	go tool cover -func=cover.out
 
-swag:
-	swag init
-
 docker_build_image:
 	docker build -t cooljar-go-whatsapp-fiber .
 
