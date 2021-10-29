@@ -1,0 +1,672 @@
+basePath: /api
+definitions:
+  domain.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  domain.HTTPErrorValidation:
+    properties:
+      field:
+        example: username
+        type: string
+      message:
+        example: username cannot empty
+        type: string
+    type: object
+  domain.JSONResult:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      message:
+        type: string
+      meta:
+        type: object
+    type: object
+  domain.WaGroup:
+    properties:
+      creation:
+        type: integer
+      desc:
+        type: string
+      descId:
+        type: string
+      descOwner:
+        type: string
+      descTime:
+        type: integer
+      id:
+        type: string
+      owner:
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/domain.WaGroupParticipants'
+        type: array
+      subject:
+        type: string
+      subjectOwner:
+        type: string
+      subjectTime:
+        type: integer
+    type: object
+  domain.WaGroupParticipants:
+    properties:
+      id:
+        type: string
+      isAdmin:
+        type: boolean
+      isSuperAdmin:
+        type: boolean
+    type: object
+  domain.WaWeb:
+    properties:
+      client:
+        $ref: '#/definitions/domain.WaWebClient'
+      server:
+        $ref: '#/definitions/domain.WaWebServer'
+    type: object
+  domain.WaWebClient:
+    properties:
+      version:
+        properties:
+          build:
+            type: integer
+          major:
+            type: integer
+          minor:
+            type: integer
+        type: object
+    type: object
+  domain.WaWebServer:
+    properties:
+      version:
+        properties:
+          build:
+            type: integer
+          major:
+            type: integer
+          minor:
+            type: integer
+        type: object
+    type: object
+info:
+  contact:
+    email: lifelinejar@mail.com
+    name: API Support
+  description: Fiber, Whatsapp and Swagger docs in isolated Docker containers.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Go Whatsapp Rest API
+  version: "1.0"
+paths:
+  /v1/whatsapp/groups/{jid}:
+    get:
+      description: Get group metadata by phone number.
+      parameters:
+      - description: 'JID. eg: group_creator-timstamp_created -> 6281271471566-1619679643'
+        in: path
+        name: jid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.WaGroup'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: get group metadata
+      tags:
+      - Info
+  /v1/whatsapp/info:
+    get:
+      description: Get info metadata.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.WaWeb'
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: get info metadata
+      tags:
+      - Info
+  /v1/whatsapp/login:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Login to whatsapp web by scanning a QR Code.
+      parameters:
+      - description: Reconnect, default to 50
+        in: formData
+        name: reconnect
+        type: integer
+      - description: QR Scan timeout in second, default 20
+        in: formData
+        name: timeout
+        type: integer
+      - description: 'Long client name, default: Go Whatsapp REST Api Fiber'
+        in: formData
+        name: client_name_long
+        type: string
+      - description: 'Short client name, default: Go Whatsapp'
+        in: formData
+        name: client_name_short
+        type: string
+      - description: 'Whatsapp Client major version, default: 2'
+        in: formData
+        name: client_version_major
+        type: integer
+      - description: 'Whatsapp Client minor version, default: 2126'
+        in: formData
+        name: client_version_minor
+        type: integer
+      - description: 'Whatsapp Client build version, default: 11'
+        in: formData
+        name: client_version_build
+        type: integer
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: Description
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: login whatsapp web
+      tags:
+      - Whatsapp
+  /v1/whatsapp/logout:
+    post:
+      description: Logout from whatsapp web.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: string
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: logout whatsapp web
+      tags:
+      - Whatsapp
+  /v1/whatsapp/send-audio:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Send audio message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: Audio file
+        in: formData
+        name: audio_file
+        required: true
+        type: file
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      - description: Message to include
+        in: formData
+        name: message
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send audio message
+      tags:
+      - Messaging
+  /v1/whatsapp/send-document:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Send document message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: Document file
+        in: formData
+        name: document_file
+        required: true
+        type: file
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      - description: Message to include
+        in: formData
+        name: message
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send document message
+      tags:
+      - Messaging
+  /v1/whatsapp/send-image:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Send image message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: Image file
+        in: formData
+        name: image_file
+        required: true
+        type: file
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      - description: Message to include
+        in: formData
+        name: message
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send image message
+      tags:
+      - Messaging
+  /v1/whatsapp/send-location:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Send location message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: 'Latitude. eg: -5.3836767'
+        in: formData
+        name: latitude
+        type: number
+      - description: 'Longitude. eg: 105.2937439'
+        in: formData
+        name: longitude
+        type: number
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send location message
+      tags:
+      - Messaging
+  /v1/whatsapp/send-text:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Send text message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: Message text
+        in: formData
+        name: text
+        required: true
+        type: string
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send text message
+      tags:
+      - Messaging
+  /v1/whatsapp/send-video:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Send video message.
+      parameters:
+      - description: 'Destination number. eg: 6281255423 or group_creator-timstamp_created
+          -> 6281271471566-1619679643 for group'
+        in: formData
+        name: msisdn
+        required: true
+        type: string
+      - description: Video file
+        in: formData
+        name: video_file
+        required: true
+        type: file
+      - description: Message Quoted ID
+        in: formData
+        name: msg_quoted_id
+        type: string
+      - description: Message Quoted
+        in: formData
+        name: msg_quoted
+        type: string
+      - description: Message to include
+        in: formData
+        name: message
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Description
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            items:
+              $ref: '#/definitions/domain.HTTPErrorValidation'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.HTTPError'
+      summary: send video message
+      tags:
+      - Messaging
+swagger: "2.0"

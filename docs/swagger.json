@@ -1,0 +1,1045 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Fiber, Whatsapp and Swagger docs in isolated Docker containers.",
+        "title": "Go Whatsapp Rest API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "email": "lifelinejar@mail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api",
+    "paths": {
+        "/v1/whatsapp/groups/{jid}": {
+            "get": {
+                "description": "Get group metadata by phone number.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "get group metadata",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JID. eg: group_creator-timstamp_created -\u003e 6281271471566-1619679643",
+                        "name": "jid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.WaGroup"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/info": {
+            "get": {
+                "description": "Get info metadata.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "get info metadata",
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.WaWeb"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/login": {
+            "post": {
+                "description": "Login to whatsapp web by scanning a QR Code.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Whatsapp"
+                ],
+                "summary": "login whatsapp web",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Reconnect, default to 50",
+                        "name": "reconnect",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "QR Scan timeout in second, default 20",
+                        "name": "timeout",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Long client name, default: Go Whatsapp REST Api Fiber",
+                        "name": "client_name_long",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Short client name, default: Go Whatsapp",
+                        "name": "client_name_short",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Whatsapp Client major version, default: 2",
+                        "name": "client_version_major",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Whatsapp Client minor version, default: 2126",
+                        "name": "client_version_minor",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Whatsapp Client build version, default: 11",
+                        "name": "client_version_build",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/logout": {
+            "post": {
+                "description": "Logout from whatsapp web.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Whatsapp"
+                ],
+                "summary": "logout whatsapp web",
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-audio": {
+            "post": {
+                "description": "Send audio message.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send audio message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Audio file",
+                        "name": "audio_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message to include",
+                        "name": "message",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-document": {
+            "post": {
+                "description": "Send document message.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send document message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Document file",
+                        "name": "document_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message to include",
+                        "name": "message",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-image": {
+            "post": {
+                "description": "Send image message.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send image message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file",
+                        "name": "image_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message to include",
+                        "name": "message",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-location": {
+            "post": {
+                "description": "Send location message.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send location message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Latitude. eg: -5.3836767",
+                        "name": "latitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "description": "Longitude. eg: 105.2937439",
+                        "name": "longitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-text": {
+            "post": {
+                "description": "Send text message.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send text message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message text",
+                        "name": "text",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/whatsapp/send-video": {
+            "post": {
+                "description": "Send video message.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "send video message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Destination number. eg: 6281255423 or group_creator-timstamp_created -\u003e 6281271471566-1619679643 for group",
+                        "name": "msisdn",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Video file",
+                        "name": "video_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted ID",
+                        "name": "msg_quoted_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message Quoted",
+                        "name": "msg_quoted",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message to include",
+                        "name": "message",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Description",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.HTTPErrorValidation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "status bad request"
+                }
+            }
+        },
+        "domain.HTTPErrorValidation": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "example": "username"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "username cannot empty"
+                }
+            }
+        },
+        "domain.JSONResult": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object"
+                }
+            }
+        },
+        "domain.WaGroup": {
+            "type": "object",
+            "properties": {
+                "creation": {
+                    "type": "integer"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "descId": {
+                    "type": "string"
+                },
+                "descOwner": {
+                    "type": "string"
+                },
+                "descTime": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.WaGroupParticipants"
+                    }
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "subjectOwner": {
+                    "type": "string"
+                },
+                "subjectTime": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.WaGroupParticipants": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "isAdmin": {
+                    "type": "boolean"
+                },
+                "isSuperAdmin": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "domain.WaWeb": {
+            "type": "object",
+            "properties": {
+                "client": {
+                    "$ref": "#/definitions/domain.WaWebClient"
+                },
+                "server": {
+                    "$ref": "#/definitions/domain.WaWebServer"
+                }
+            }
+        },
+        "domain.WaWebClient": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "object",
+                    "properties": {
+                        "build": {
+                            "type": "integer"
+                        },
+                        "major": {
+                            "type": "integer"
+                        },
+                        "minor": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "domain.WaWebServer": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "object",
+                    "properties": {
+                        "build": {
+                            "type": "integer"
+                        },
+                        "major": {
+                            "type": "integer"
+                        },
+                        "minor": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
