@@ -1,7 +1,7 @@
 .PHONY: test security run stop
 
-SERVER_PORT = 3000
-SERVER_URL = "0.0.0.0:$(SERVER_PORT)"
+SERVER_PORT = 3000:3000
+SERVER_URL = "0.0.0.0:3000"
 SERVER_READ_TIMEOUT = 60
 JWT_SECRET_KEY = "secretOfJwt"
 JWT_SECRET_KEY_EXPIRE_MINUTES = 15
@@ -25,7 +25,7 @@ docker_build_image:
 docker_app: docker_build_image
 	docker run -d \
         		--name cooljar-go-whatsapp-fiber-c \
-        		-p $(SERVER_PORT):$(SERVER_PORT) \
+        		-p $(SERVER_PORT) \
         		-e SERVER_URL=$(SERVER_URL) \
         		-e SERVER_READ_TIMEOUT=$(SERVER_READ_TIMEOUT) \
         		-e JWT_SECRET_KEY=$(JWT_SECRET_KEY) \
