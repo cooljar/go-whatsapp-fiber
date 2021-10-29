@@ -22,7 +22,6 @@ Optional package:
 $ make run
 
 # Process:
-#   - Generate API docs by Swagger
 #   - Build and run Docker containers
 ```
 Stop application by using following command:

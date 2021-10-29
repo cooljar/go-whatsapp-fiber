@@ -16,6 +16,3 @@ Makefile
 
 # Jetbrains
 .idea/
-
-# OTHER
-DEVELOPER_NOTE.md
